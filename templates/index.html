@@ -1,0 +1,91 @@
+<html>
+<head>
+    <title>Live TextFSM editor</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!-- split.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+    <script src="https://unpkg.com/split.js/split.min.js"></script>
+
+    <link rel="stylesheet" href="../static/style.css">
+    <script src="../static/app.js"></script>
+</head>
+<body onload="init();">
+<div id="wrapper">
+    <div id="header">
+        <h1>TextFSM Workbench</h1>
+        <h4 id="status" data-port="{{ port }}">Not connected</h4>
+        <p>Edit the template and data and watch the output change. Or try out some of the provided examples. (
+            <a target="blank" href="https://github.com/google/textfsm/wiki/TextFSM">wiki</a>)</p>
+        <button onclick="example('1')">Example 1</button>
+        <button onclick="example('2_multi1')">Example 2-a</button>
+        <button onclick="example('2_multi2')">Example 2-b</button>
+        <button onclick="example('3_BAD')">Example 3-a</button>
+        <button onclick="example('3_GOOD')">Example 3-b</button>
+        <button onclick="example('4_TYPO')">Example 4-a</button>
+        <button onclick="example('4_NEWL')">Example 4-b</button>
+        <button onclick="example('complex')">Complex example</button>
+    </div> <!-- #header -->
+    <div id="content">
+        <div id="content-left" class="split split-horizontal content">
+            <div id="content-left-top" class="split content">
+                <h3>FSM Template</h3>
+                <p id="info"></p>
+				<textarea id="template">Value Required INTERFACE (\S+)
+Value LINK_STATUS (\w+)
+Value ADMIN_STATE (\S+)
+Value HARDWARE_TYPE (\S+)
+Value MTU (\d+|Unlimited)
+
+Start
+  ^\s+Logical\s+interface\s+${INTERFACE}
+  ^Physical\s+interface:\s+${INTERFACE},\s+${ADMIN_STATE},\s+Physical\s+link\s+is\s+${LINK_STATUS}
+  ^.*ype:\s+${HARDWARE_TYPE},.*MTU:\s+${MTU}.* -> Record
+  ^.*MTU:\s+${MTU}.* -> Record
+  ^.*flags -> Record</textarea><!-- #template -->
+            </div><!-- #content-left-top -->
+            <div id="content-left-bottom" class="split content">
+                <h3>Data to parse</h3>
+					<textarea id="data">Physical interface: ge-3/0/2, Enabled, Physical link is Up
+  Interface index: 167, SNMP ifIndex: 35
+  Link-level type: 52, MTU: 1522, Speed: 1000mbps, Loopback: Disabled,
+  Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled
+  Remote fault: Online
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  CoS queues     : 4 supported, 4 maximum usable queues
+  Current address: 00:00:5e:00:53:7c, Hardware address: 00:00:5e:00:53:7c
+  Last flapped   : 2006-08-10 17:25:10 PDT (00:01:08 ago)
+  Input rate     : 0 bps (0 pps)
+  Output rate    : 0 bps (0 pps)
+  Ingress rate at Packet Forwarding Engine      : 0 bps (0 pps)
+  Ingress drop rate at Packet Forwarding Engine : 0 bps (0 pps)
+  Active alarms  : None
+  Active defects : None
+ 
+  Logical interface ge-3/0/2.0 (Index 72) (SNMP ifIndex 69) 
+    Flags: SNMP-Traps 0x4000
+    VLAN-Tag [ 0x8100.512 0x8100.513 ] In(pop-swap 0x8100.530) Out(swap-push     0x8100.512 0x8100.513)
+    Encapsulation: VLAN-CCC
+    Egress account overhead: 100
+    Ingress account overhead: 90
+    Input packets : 0 
+    Output packets: 0
+    Protocol ccc, MTU: 1522
+      Flags: Is-Primary</textarea><!-- #data -->
+            </div> <!-- #content-left-bottom -->
+        </div> <!-- #content-left -->
+        <div id="content-right" class="split split-horizontal content">
+            <div id="content-right-top" class="split content">
+                <h3>Output</h3>
+                <p>Updated: <span id="timestamp"></span></p>
+                <div id="parsed" class="textbox"></div>
+            </div> <!-- #content-right-top -->
+            <div id="content-right-bottom" class="split content">
+                <h3>Generated regexes</h3>
+                <div id="regexes" class="textbox"></div>
+            </div> <!-- #content=right-bottom -->
+        </div> <!-- #content-right -->
+    </div> <!-- #content -->
+</div> <!-- #wrapper -->
+</body>
+</html>
