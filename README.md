@@ -25,3 +25,8 @@ The app works as intended and is mostly done. What could/should be improved is r
 - Activate the virtualenv, start the server with `python main.py`
 - Navigate to http://127.0.0.1:5001 in your browser
 - Try the examples, or paste your own data and templates
+
+
+## Acknowledgements
+
+- [Attumm](https://github.com/Attumm) provided [tutorial examples](https://github.com/Attumm/textfsm_tutorial)
