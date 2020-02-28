@@ -1,15 +1,17 @@
+import json
+import platform
 from datetime import datetime
 from io import StringIO
-import json
 
-from flask import Flask, render_template
-from flask_sockets import Sockets
 import textfsm
+from flask import Flask, render_template, request
+from flask_socketio import SocketIO, emit
 
-PORT = 5001
+BIND, HOST, PORT = "127.0.0.1", "127.0.0.1", 5001
 
 app = Flask(__name__)
-sockets = Sockets(app)
+app.config["SECRET_KEY"] = "secret!"
+socketio = SocketIO(app)
 
 
 def parse_textfsm(data, template):
@@ -17,39 +19,49 @@ def parse_textfsm(data, template):
     and created regexes."""
     fsm = textfsm.TextFSM(StringIO(template.strip()))
     regexes = "".join(
-        f"{rule.line_num:3} {state:15} {rule.regex}\n" for state, rules in fsm.states.items() for rule in rules
+        f"{rule.line_num:3} {state:15} {rule.regex}\n"
+        for state, rules in fsm.states.items()
+        for rule in rules
     )
     records = fsm.ParseText(data.strip())
     return [dict(zip(fsm.header, record)) for record in records], regexes
 
 
-@sockets.route("/parser")
-def parser(conn):
-    while not conn.closed:
-        error = parsed = regexes = None
-        raw = conn.receive()
-        if raw is None:
-            continue
-        timestamp = datetime.now().strftime("%T")
-        try:
-            message = json.loads(raw)
-            parsed, regexes = parse_textfsm(message["data"], message["template"])
-        except (TypeError, ValueError) as e:
-            error = f'Invalid JSON "{e}"'
-        except (KeyError, textfsm.Error) as e:
-            error = str(e)
-        conn.send(json.dumps({"ts": timestamp, "error": error, "parsed": parsed, "regexes": regexes}))
-
-
 @app.route("/")
 def index():
-    return render_template("index.html", port=PORT)
+    return render_template(
+        "index.html",
+        port=PORT,
+        host=HOST,
+        versions=f"TextFSM {textfsm.__version__} Python {platform.python_version()}",
+    )
+
+
+@socketio.on("connect")
+def test_connect():
+    print("Client connected from {}".format(request.environ["REMOTE_ADDR"]))
+
+
+@socketio.on("disconnect")
+def test_disconnect():
+    print("Client disconnected from {}".format(request.environ["REMOTE_ADDR"]))
+
+
+@socketio.on("parse")
+def test_parse(message):
+    error = parsed = regexes = None
+    timestamp = datetime.now().strftime("%T")
+    try:
+        parsed, regexes = parse_textfsm(message["data"], message["template"])
+        parsed = json.dumps(parsed, indent=2)
+    except (KeyError, textfsm.Error) as e:
+        error = str(e)
+    emit(
+        "parse_response",
+        {"error": error, "text": parsed, "regex": regexes, "ts": timestamp},
+    )
 
 
 if __name__ == "__main__":
-    from gevent import pywsgi
-    from geventwebsocket.handler import WebSocketHandler
-
-    print(f"Navigate to http://127.0.0.1:{PORT} in your browser.")
-    server = pywsgi.WSGIServer(("", PORT), app, handler_class=WebSocketHandler)
-    server.serve_forever()
+    print(f"Starting on {BIND}:{PORT}")
+    socketio.run(app, host=BIND, port=PORT)
