@@ -23,6 +23,13 @@ The app works as intended and is mostly done. What could/should be improved is r
 - Navigate to http://127.0.0.1:5001 in your browser
 - Try the examples, or paste your own data and templates
 
+### Running with Docker and docker-compose
+
+- Install Docker and docker-compose
+- `docker-compose up -d`
+- Navigate to http://127.0.0.1:5001 in your browser
+- `docker-compose down` stops the container
+
 ## Acknowledgements
 
 - [Attumm](https://github.com/Attumm) provided [tutorial examples](https://github.com/Attumm/textfsm_tutorial)

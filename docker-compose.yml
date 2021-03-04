@@ -1,0 +1,7 @@
+version: '3.8'
+services:
+  textfsm-workbench:
+    build:
+      context: .
+    ports:
+      - 5001:5001
