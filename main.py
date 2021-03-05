@@ -7,7 +7,7 @@ import textfsm
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
 
-BIND, HOST, PORT = "0.0.0.0", "0.0.0.0", 5001
+BIND, HOST, PORT = "0.0.0.0", "127.0.0.1", 5001
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret!"
