@@ -9,8 +9,9 @@ verify_ssl = true
 flask = "==1.1.*"
 textfsm = "==1.1.*"
 eventlet = "==0.25.*"
-Flask-SocketIO = "==4.2.*"
+flask-socketio = "==4.*"
+python-socketio = "==4.*"
+python-engineio = "==3.*"  # https://flask-socketio.readthedocs.io/en/latest/#version-compatibility
 
 [requires]
 python_version = "3.8"
-
