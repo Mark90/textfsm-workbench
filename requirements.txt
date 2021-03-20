@@ -1,17 +1,18 @@
--i https://pypi.org/simple
-click==7.0
-dnspython==1.16.0
+-i https://pypi.org/simple/
+bidict==0.21.2
+click==7.1.2
+dnspython==2.1.0
 eventlet==0.25.1
 flask-socketio==4.2.1
 flask==1.1.1
 future==0.18.2
-greenlet==0.4.15
+greenlet==1.0.0
 itsdangerous==1.1.0
-jinja2==2.11.1
+jinja2==2.11.3
 markupsafe==1.1.1
 monotonic==1.5
-python-engineio==3.11.2
-python-socketio==4.4.0
-six==1.14.0
+python-engineio==4.0.1
+python-socketio==5.1.0
+six==1.15.0
 textfsm==1.1.0
-werkzeug==1.0.0
+werkzeug==1.0.1
