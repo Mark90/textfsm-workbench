@@ -23,7 +23,7 @@ def parse_textfsm(data, template):
         for state, rules in fsm.states.items()
         for rule in rules
     )
-    records = fsm.ParseText(data.strip())
+    records = fsm.ParseText(data.rstrip())
     return [dict(zip(fsm.header, record)) for record in records], regexes
 
 
