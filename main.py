@@ -1,5 +1,6 @@
 import json
 import platform
+import secrets
 from datetime import datetime
 from io import StringIO
 
@@ -10,7 +11,7 @@ from flask_socketio import SocketIO, emit
 BIND, HOST, PORT = "127.0.0.1", "127.0.0.1", 5001
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "secret!"
+app.config["SECRET_KEY"] = secrets.token_bytes(16)
 socketio = SocketIO(app)
 
 
