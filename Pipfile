@@ -4,13 +4,19 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
+black = "*"
+flake8 = "*"
+isort = "*"
 
 [packages]
 flask = "==1.1.*"
 textfsm = "==1.1.*"
-eventlet = "==0.25.*"
-Flask-SocketIO = "==4.2.*"
+flask-socketio = "*"
+eventlet = "*"
 
 [requires]
 python_version = "3.8"
 
+[pipenv]
+allow_prereleases = true
